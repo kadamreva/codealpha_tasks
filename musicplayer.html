@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Music Player</title>
+    <link rel="stylesheet" href="style.css">
+<style>
+body {
+    background-color: #282c34;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.music-player {
+    text-align: center;
+    background-color: #3e4147;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.controls {
+    margin: 20px 0;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+</style>
+</head>
+<body>
+    <div class="music-player">
+        <h1>My Music Player</h1>
+        <audio id="audio" src="music/song1.mp3"></audio>
+        <div class="track-info">
+            <h2 id="track-title">Track Title</h2>
+            <h3 id="track-artist">Artist Name</h3>
+        </div>
+        <div class="controls">
+            <button id="prev">Prev</button>
+            <button id="play">Play</button>
+            <button id="next">Next</button>
+        </div>
+        <div class="progress-container">
+            <input type="range" id="progress" value="0" step="1">
+        </div>
+    </div>
+    <script>
+const audio = document.getElementById('audio');
+const playButton = document.getElementById('play');
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+const trackTitle = document.getElementById('track-title');
+const trackArtist = document.getElementById('track-artist');
+const progress = document.getElementById('progress');
+
+// Array of tracks
+const tracks = [
+    { title: "Song 1", artist: "Artist 1", src: "music/song1.mp3" },
+    { title: "Song 2", artist: "Artist 2", src: "music/song2.mp3" },
+    { title: "Song 3", artist: "Artist 3", src: "music/song3.mp3" }
+];
+
+let currentTrackIndex = 0;
+
+// Load the current track
+function loadTrack(index) {
+    const track = tracks[index];
+    audio.src = track.src;
+    trackTitle.textContent = track.title;
+    trackArtist.textContent = track.artist;
+}
+
+// Play or pause the track
+function togglePlay() {
+    if (audio.paused) {
+        audio.play();
+        playButton.textContent = "Pause";
+    } else {
+        audio.pause();
+        playButton.textContent = "Play";
+    }
+}
+
+// Play the next track
+function playNext() {
+    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+    loadTrack(currentTrackIndex);
+    audio.play();
+    playButton.textContent = "Pause";
+}
+
+// Play the previous track
+function playPrev() {
+    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+    loadTrack(currentTrackIndex);
+    audio.play();
+    playButton.textContent = "Pause";
+}
+
+// Update progress bar
+audio.addEventListener('timeupdate', () => {
+    const progressPercent = (audio.currentTime / audio.duration) * 100;
+    progress.value = progressPercent;
+});
+
+// Seek track
+progress.addEventListener('input', () => {
+    const seekTime = (progress.value / 100) * audio.duration;
+    audio.currentTime = seekTime;
+});
+
+// Event listeners
+playButton.addEventListener('click', togglePlay);
+nextButton.addEventListener('click', playNext);
+prevButton.addEventListener('click', playPrev);
+
+// Load the first track
+loadTrack(currentTrackIndex);
+</script>
+</body>
+</html>

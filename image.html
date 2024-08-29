@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.gallery-item {
+    margin: 10px;
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.caption {
+    margin: 10px;
+    text-align: center;
+    color: white;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+</style>
+</head>
+<body>
+    <div class="gallery">
+        <img src="image1.jpeg" alt="Image 1" class="gallery-item">
+        <img src="image2.jpeg" alt="Image 2" class="gallery-item">
+        <img src="image3.jpeg" alt="Image 3" class="gallery-item">
+        <img src="image4.jpeg" alt="Image 4" class="gallery-item">
+        <img src="image5.jpeg" alt="Image 5" class="gallery-item">
+    </div>
+
+    <div id="modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modal-image">
+        <div class="caption" id="caption"></div>
+        <button class="prev" id="prev">&lt;</button>
+        <button class="next" id="next">&gt;</button>
+    </div>
+
+    <script>
+const galleryItems = document.querySelectorAll('.gallery-item');
+const modal = document.getElementById('modal');
+const modalImage = document.getElementById('modal-image');
+const caption = document.getElementById('caption');
+const closeButton = document.querySelector('.close');
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+
+let currentIndex = 0;
+
+galleryItems.forEach((item, index) => {
+    item.addEventListener('click', () => {
+        currentIndex = index;
+        openModal(item.src, item.alt);
+    });
+});
+
+closeButton.addEventListener('click', closeModal);
+prevButton.addEventListener('click', showPrevImage);
+nextButton.addEventListener('click', showNextImage);
+
+function openModal(src, alt) {
+    modal.style.display = 'block';
+    modalImage.src = src;
+    caption.innerText = alt;
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+}
+
+function showPrevImage() {
+    currentIndex = (currentIndex > 0) ? currentIndex - 1 : galleryItems.length - 1;
+    updateModalImage();
+}
+
+function showNextImage() {
+    currentIndex = (currentIndex < galleryItems.length - 1) ? currentIndex + 1 : 0;
+    updateModalImage();
+}
+
+function updateModalImage() {
+    const item = galleryItems[currentIndex];
+    modalImage.src = item.src;
+    caption.innerText = item.alt;
+}
+</script>
+</body>
+</html>
